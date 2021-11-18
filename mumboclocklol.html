@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<!-- Chrome, Firefox OS and Opera -->
+<meta name="theme-color" content="#000">
+<!-- Windows Phone -->
+<meta name="msapplication-navbutton-color" content="#000">
+<!-- iOS Safari -->
+<meta name="apple-mobile-web-app-status-bar-style" content="#000">
+<head>
+<title>Mumbo O'Clock</title>
+</head>
+<style>
+body {
+	position: absolute;
+	left: -8px;
+	top: -8px;
+	width: 100vw;
+	height: 100vh;
+	background: black;
+	position: fixed;
+}
+img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: auto;
+	margin-bottom: auto;
+	left: 0; 
+	right: 0;
+	top: 0;
+	bottom: 0;
+	position: absolute;
+	max-width: 800px;
+	width: 100%;
+	transition: 0.5s !important;
+	transition-timing-function: ease-in-out;
+}
+</style>
+<body>
+<img src="BG.svg">
+<img src="BODYALONE.svg">
+<img src="ArmLong.svg" style="transform: rotate(500deg);" id="min">
+<img src="ArmShort.svg" id="hou">
+<img src="TIE.svg">
+<img src="HEAD.svg" id="head" onclick="mustacheAway()">
+<img src="GHandAlone.svg" id="grian" style="left:100vw; opacity: 0;">
+<script>
+var min = document.getElementById("min");
+var hou = document.getElementById("hou");
+var head = document.getElementById("head");
+var grian = document.getElementById("grian");
+var d;
+
+var mustache = 0;
+var nigth;
+
+var next;
+
+var images = [];
+function preload() {
+    for (var i = 0; i < arguments.length; i++) {
+        images[i] = new Image();
+        images[i].src = preload.arguments[i];
+    }
+}
+
+function mustacheAway() {
+	if (mustache == 0) {
+		mustache = 2;
+		grian.src = "GHandAlone.svg";
+		grian.style = "left: 0vw; opacity: 1;";
+		setTimeout(function() {
+			grian.src = "GHandWMustache.svg";
+			if (nigth == 0) {
+				if (d.getDate() == 1 && d.getMonth() == 11) {
+					head.src = "MumboBDAY.svg";
+				} else {
+					head.src = "HEADNoMustache.svg";
+				}
+			} else {
+				head.src = "SLEEPYHEAD_NoMustache.svg";
+			}
+			mustache = 1;
+			grian.style = "left: 100vw; opacity: 0;";
+		}, 505);
+	}
+}
+
+function render() {
+	
+	d = new Date();
+	
+	var mAngle = d.getMinutes()*6+d.getSeconds()*0.1;
+	var hAngle = d.getHours()*30+d.getMinutes()*0.5+d.getSeconds()*0.0083;
+	var sAngle = d.getSeconds()%2*10-5;
+	
+	min.style.transform = `rotate( ${mAngle}deg )`;
+	hou.style.transform = `rotate( ${hAngle}deg )`;
+	
+	
+	if (d.getHours()>21||d.getHours()<8) {
+		nigth = 1;
+		if (mustache == 0) {
+			head.src = "SLEEPYHEAD.svg";
+		} else if (mustache == 1) {
+			head.src = "SLEEPYHEAD_NoMustache.svg";
+		}
+		head.style = `transform: rotate( 365deg ); top: ${sAngle/2}px;`;
+	} else {
+		nigth = 0;
+		if (mustache == 0) {
+			if (d.getDate() == 1 && d.getMonth() == 11) {
+				head.src = "MumboBDAYandMustache.svg";
+			} else {
+				head.src = "HEAD.svg";
+			}
+		} else if (mustache == 1) {
+			if (d.getDate() == 1 && d.getMonth() == 11) {
+				head.src = "MumboBDAY.svg";
+			} else {
+				head.src = "HEADNoMustache.svg";
+			}
+		}
+		head.style = `transform: rotate( ${sAngle}deg ); top: 0;`;
+	}
+	
+	if (d.getHours()>=12&&d.getHours()<=14) {
+		min.src = "ArmLongWSpoon.svg";
+		hou.src = "ArmShortWSpoon.svg";
+	} else {
+		min.src = "ArmLong.svg";
+		hou.src = "ArmShort.svg";
+	}
+	
+	clearTimeout(next);
+	
+	next = setTimeout(render, 1000);
+	
+}
+
+
+setTimeout(render, 1000);
+
+preload("GHandAlone.svg",
+	"GHandWMustache.svg",
+	"HEADNoMustache.svg",
+	"SLEEPYHEAD_NoMustache.svg",
+	"SLEEPYHEAD.svg",
+	"SLEEPYHEAD_NoMustache.svg",
+	"MumboBDAYandMustache.svg",
+	"HEAD.svg",
+	"MumboBDAY.svg",
+	"HEADNoMustache.svg",
+	"ArmLongWSpoon.svg",
+	"ArmShortWSpoon.svg",
+	"ArmLong.svg",
+	"ArmShort.svg");
+</script>
+</body>
+</html>
